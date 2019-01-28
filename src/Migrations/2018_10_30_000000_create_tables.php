@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Wink\Lang\Lang;
 
 class CreateTables extends Migration
 {
@@ -39,6 +40,7 @@ class CreateTables extends Migration
             $table->dateTime('publish_date')->default('2018-10-10 00:00:00');
             $table->string('featured_image')->nullable();
             $table->string('featured_image_caption');
+            $table->enum('lang', Lang::getLanguagesAvailable());
             $table->uuid('author_id')->index();
             $table->timestamps();
         });
@@ -60,6 +62,7 @@ class CreateTables extends Migration
             $table->string('slug')->unique();
             $table->string('title');
             $table->text('body');
+            $table->enum('lang', Lang::getLanguagesAvailable());
             $table->timestamps();
         });
     }
