@@ -2,6 +2,7 @@
 
 namespace Wink\Http\Controllers;
 
+use Wink\Lang\Lang;
 use Wink\WinkPage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -58,6 +59,7 @@ class PagesController
             'title' => request('title'),
             'slug' => request('slug'),
             'body' => request('body', ''),
+            'lang' => request('lang', Lang::FRENCH),
             'meta' => request('meta', (object) []),
         ];
 

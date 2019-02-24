@@ -2,6 +2,7 @@
 
 namespace Wink\Http\Controllers;
 
+use Wink\Lang\Lang;
 use Wink\WinkTag;
 use Wink\WinkPost;
 use Illuminate\Support\Str;
@@ -70,6 +71,7 @@ class PostsController
             'slug' => request('slug'),
             'body' => request('body', ''),
             'published' => request('published'),
+            'lang' => request('lang', Lang::FRENCH),
             'author_id' => request('author_id'),
             'featured_image' => request('featured_image'),
             'featured_image_caption' => request('featured_image_caption', ''),
