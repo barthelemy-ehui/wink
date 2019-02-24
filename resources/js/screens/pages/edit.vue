@@ -27,6 +27,7 @@
                     title: 'Page Title',
                     slug: '',
                     body: '',
+                    lang: ['fr','en'],
                     meta: {
                         meta_description: '',
                         opengraph_title: '',
@@ -108,6 +109,7 @@
 
             fillForm(data) {
                 this.form.id = data.id;
+                this.form.lang = data.lang;
 
                 if (this.id != 'new') {
                     this.form.title = data.title;
@@ -215,7 +217,11 @@
             <div class="flex items-center" v-if="ready && entry" slot="right-side">
 
                 <button class="py-1 px-2 btn-primary text-sm mr-6" @click="save" v-loading="status">Save</button>
-
+                <select name="lang" @select="selectLang(lang)" v-model="form.lang" v-loading="status">
+                    <option value="fr">FR</option>
+                    <option value="en">EN</option>
+                </select>
+                &nbsp;
                 <dropdown class="relative">
                     <button slot="trigger" class="focus:outline-none text-light hover:text-primary h-8">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-4 h-4 fill-current mt-1">

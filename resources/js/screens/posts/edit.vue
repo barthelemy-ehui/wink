@@ -41,6 +41,7 @@
                     featured_image_caption: '',
                     body: '',
                     published: false,
+                    lang: ['fr','en'],
                     publish_date: '',
                     meta: {
                         meta_description: '',
@@ -131,6 +132,7 @@
                 this.form.id = data.id;
                 this.form.publish_date = data.publish_date;
                 this.form.slug = 'draft-' + this.form.id;
+                this.form.lang = data.lang;
 
                 if (this.id != 'new') {
                     this.form.title = data.title;
@@ -295,7 +297,13 @@
 
                 this.notifySuccess('Post was converted to a draft!', 2000);
             },
+            selectLang(lang) {
 
+                console.log(lang);
+                this.form.lang = lang;
+                this.save();
+
+            },
 
             /**
              * Save the post.
@@ -447,6 +455,10 @@
                 <button class="btn-sm btn-primary" @click="publishPost" v-if="!form.published" v-loading="status">Publish this post</button>
                 <button class="btn-sm btn-primary" @click="publishPost" v-if="form.published" v-loading="status">Update Post</button>
                 <button class="btn-sm ml-1 btn-light" @click="unpublishPost" v-if="form.published" v-loading="status">Convert to draft</button>
+                <select name="lang" @select="selectLang(lang)" v-model="form.lang" v-loading="status">
+                    <option value="fr">FR</option>
+                    <option value="en">EN</option>
+                </select>
                 <button class="btn-sm ml-1 btn-light" @click="publishingModalShown = false">Cancel</button>
             </div>
         </modal>
