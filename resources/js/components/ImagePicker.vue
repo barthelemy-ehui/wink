@@ -1,22 +1,23 @@
-<script type="text/ecmascript-6">
+<script type="text/ecmascript">
     import axios from 'axios';
-    import _ from 'lodash';
 
     export default {
         props: [],
 
         data() {
             return {
+                file: null,
                 imageUrl: '',
                 uploadProgress: 100,
 
                 selectedUnsplashImage: null,
-
                 unsplashModalShown: false,
                 unsplashSearchTerm: '',
                 unsplashPage: 1,
                 searchingUnsplash: true,
                 unsplashImages: [],
+
+                cropperModalShown: false,
             }
         },
 
@@ -62,27 +63,13 @@
 
 
             /**
-             * Upload the selected image.
+             * Load the selected image into the Cropper.
              */
-            uploadSelectedImage(event) {
-                let file = event.target.files[0];
-                let formData = new FormData();
+            loadSelectedImage(event){
+                this.file = event.target.files[0];
 
-                formData.append('image', file, file.name);
-
-                this.$emit('uploading');
-
-                this.http().post('/api/uploads', formData, {
-                    onUploadProgress: progressEvent => {
-                        this.$emit('progressing', {progress: Math.round((progressEvent.loaded * 100) / progressEvent.total)});
-                    }
-                }).then(response => {
-                    this.$emit('changed', {url: response.data.url});
-                }).catch(error => {
-                    console.log(error);
-                });
+                this.showCropperModal();
             },
-
 
             /**
              * Open unsplash modal.
@@ -117,6 +104,32 @@
                 this.unsplashSearchTerm = '';
                 this.unsplashModalShown = false;
                 this.selectedUnsplashImage = null;
+            },
+
+
+            /**
+             * Open the cropper modal.
+             */
+            showCropperModal() {
+                this.cropperModalShown = true;
+            },
+
+
+            /**
+             * Close the cropper modal.
+             */
+            closeCropperModal({image}) {
+                this.cropperModalShown = false;
+                this.imageUrl = image;
+                this.$emit('changed', {url: image, caption: ''});
+            },
+
+
+            /**
+             * Close and Cancel the cropper modal.
+             */
+            cancelCropperModal() {
+                this.cropperModalShown = false;
             }
         }
     }
@@ -124,7 +137,7 @@
 
 <template>
     <div>
-        <input type="file" class="hidden" :id="'imageUpload'+_uid" accept="image/*" v-on:change="uploadSelectedImage">
+        <input type="file" class="hidden" :id="'imageUpload'+_uid" accept="image/*" v-on:change="loadSelectedImage">
 
         <div class="mb-0">
             Please <label :for="'imageUpload'+_uid" class="cursor-pointer underline">upload</label> an image
@@ -169,5 +182,12 @@
                 </div>
             </div>
         </fullscreen-modal>
+
+        <cropper-modal v-if="cropperModalShown"
+                       :image="file"
+                       :viewport ="{ width: 600, height: 400 }"
+                       :boundary="{ width: 600, height: 400 }"
+                       @close="closeCropperModal"
+                       @cancel="cancelCropperModal"></cropper-modal>
     </div>
 </template>
